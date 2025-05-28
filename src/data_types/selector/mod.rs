@@ -10,12 +10,13 @@ use std::{fmt::Display, ops::Range};
 #[builder(pattern = "owned")]
 pub struct Selector {
     target: Target,
+    #[builder(setter(custom))]
     distance: Argument<MCRange>,
 }
 
-impl Selector {
+impl SelectorBuilder {
     pub fn distance(mut self, distance: Range<f64>) -> Self {
-        self.distance = Argument::new("distance", MCRange::Bound(distance));
+        self.distance = Some(Argument::new("distance", MCRange::Bound(distance)));
         self
     }
 }
