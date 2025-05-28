@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 case = "1.0.0"
-derive_builder = "0.20.2"
+derive-new = "0.7.0"
 strum = { version = "0.27.1", features = ["derive"] }

@@ -1,5 +1,5 @@
 use case::CaseExt;
-use derive_builder::Builder;
+use derive_new::new;
 
 use crate::data_types::resource::effect::EffectResource;
 use crate::data_types::selector::Selector;
@@ -8,15 +8,12 @@ use std::fmt::Display;
 pub struct Effect;
 
 impl Effect {
-    pub fn give(self, selector: Selector, effect: EffectResource) -> EffectGiveBuilder {
-        EffectGiveBuilder::default()
-            .selector(selector)
-            .effect(effect)
+    pub fn give(self, selector: Selector, effect: EffectResource) -> EffectGive {
+        EffectGive::new(selector, effect)
     }
 }
 
-#[derive(Builder)]
-#[builder(pattern = "owned")]
+#[derive(new)]
 pub struct EffectGive {
     selector: Selector,
     effect: EffectResource,

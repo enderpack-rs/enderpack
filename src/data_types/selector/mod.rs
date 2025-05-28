@@ -3,18 +3,17 @@ pub mod target;
 
 use crate::data_types::range::*;
 use crate::data_types::selector::{argument::*, target::*};
-use derive_builder::*;
+use derive_new::new;
 use std::{fmt::Display, ops::Range};
 
-#[derive(Debug, Builder)]
-#[builder(pattern = "owned")]
+#[derive(new)]
 pub struct Selector {
     target: Target,
-    #[builder(setter(custom))]
-    distance: Argument<MCRange>,
+    #[new(default)]
+    distance: Option<Argument<MCRange>>,
 }
 
-impl SelectorBuilder {
+impl Selector {
     pub fn distance(mut self, distance: Range<f64>) -> Self {
         self.distance = Some(Argument::new("distance", MCRange::Bound(distance)));
         self
@@ -33,7 +32,7 @@ impl Display for Selector {
             Target::N => sel.push_str("@n"),
         }
         let mut args: Vec<String> = Vec::new();
-        for arg in [&self.distance].into_iter() {
+        for arg in [&self.distance].into_iter().flatten() {
             // e.g. <argument>=<value>
             args.push(arg.to_string())
         }
@@ -51,10 +50,10 @@ impl Display for Selector {
     }
 }
 
-pub fn all() -> SelectorBuilder {
-    SelectorBuilder::default().target(Target::E)
+pub fn all() -> Selector {
+    Selector::new(Target::E)
 }
 
-pub fn all_players() -> SelectorBuilder {
-    SelectorBuilder::default().target(Target::A)
+pub fn all_players() -> Selector {
+    Selector::new(Target::A)
 }
