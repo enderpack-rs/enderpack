@@ -1,18 +1,10 @@
-use std::{fmt::Display, ops::Range};
+pub mod argument;
+pub mod target;
 
-use crate::data_types::argument::Argument;
-use crate::data_types::range::MCRange;
+use crate::data_types::range::*;
+use crate::data_types::selector::{argument::*, target::*};
 use derive_new::new;
-
-#[derive(Debug)]
-enum Target {
-    P,
-    R,
-    A,
-    E,
-    S,
-    N,
-}
+use std::{fmt::Display, ops::Range};
 
 #[derive(new, Debug)]
 pub struct Selector {
