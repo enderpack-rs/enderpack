@@ -4,7 +4,7 @@ pub mod target;
 use crate::data_types::range::*;
 use crate::data_types::selector::{argument::*, target::*};
 use derive_new::new;
-use std::{fmt::Display, ops::Range};
+use std::fmt::Display;
 
 #[derive(new)]
 pub struct Selector {
@@ -14,8 +14,11 @@ pub struct Selector {
 }
 
 impl Selector {
-    pub fn distance(mut self, distance: Range<f64>) -> Self {
-        self.distance = Some(Argument::new("distance", MCRange::Bound(distance)));
+    pub fn distance<T>(mut self, distance: T) -> Self
+    where
+        MCRange: std::convert::From<T>,
+    {
+        self.distance = Some(Argument::new("distance", MCRange::from(distance)));
         self
     }
 }

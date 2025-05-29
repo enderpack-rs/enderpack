@@ -1,6 +1,6 @@
 use std::{
     fmt::Display,
-    ops::{Range, RangeFrom, RangeTo},
+    ops::{Bound::*, Range, RangeBounds, RangeFrom, RangeTo},
 };
 
 #[derive(Debug)]
@@ -18,5 +18,23 @@ impl Display for MCRange {
             MCRange::To(range) => format!("..{}", range.end),
         };
         write!(f, "{}", as_string)
+    }
+}
+
+impl From<Range<f64>> for MCRange {
+    fn from(value: Range<f64>) -> Self {
+        MCRange::Bound(value)
+    }
+}
+
+impl From<RangeFrom<f64>> for MCRange {
+    fn from(value: RangeFrom<f64>) -> Self {
+        MCRange::From(value)
+    }
+}
+
+impl From<RangeTo<f64>> for MCRange {
+    fn from(value: RangeTo<f64>) -> Self {
+        MCRange::To(value)
     }
 }
