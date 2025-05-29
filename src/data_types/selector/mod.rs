@@ -14,6 +14,12 @@ pub struct Selector {
 }
 
 impl Selector {
+    pub fn all() -> Selector {
+        Selector::new(Target::E)
+    }
+    pub fn all_players() -> Selector {
+        Selector::new(Target::A)
+    }
     pub fn distance<T>(mut self, distance: T) -> Self
     where
         MCRange: std::convert::From<T>,
@@ -51,12 +57,4 @@ impl Display for Selector {
         }
         write!(f, "{}", sel)
     }
-}
-
-pub fn all() -> Selector {
-    Selector::new(Target::E)
-}
-
-pub fn all_players() -> Selector {
-    Selector::new(Target::A)
 }
