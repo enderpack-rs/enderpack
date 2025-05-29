@@ -16,5 +16,5 @@ fn main() {
             target_selector,
             json!(["Some ",{"strikethrough":true,"text":"crossed"}," text"])
         )
-    )
+    );
 }
