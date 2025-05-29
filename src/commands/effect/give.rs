@@ -13,6 +13,13 @@ pub struct EffectGive {
     duration: Option<i32>,
 }
 
+impl EffectGive {
+    pub fn duration(mut self, duration: i32) -> Self {
+        self.duration = Some(duration);
+        self
+    }
+}
+
 impl Display for EffectGive {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
@@ -25,7 +32,7 @@ impl Display for EffectGive {
             }
         )?;
         for arg in [&self.duration].into_iter().flatten() {
-            write!(f, "{}", arg)?;
+            write!(f, " {}", arg)?;
         }
         Ok(())
     }
