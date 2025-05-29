@@ -4,7 +4,7 @@ use derive_new::new;
 
 use crate::data_types::{
     range::MCRange,
-    selector::{argument::Argument, variable::SelectorVariable},
+    selector::{argument::*, variable::SelectorVariable},
 };
 
 use super::Selector;
@@ -14,6 +14,10 @@ pub struct TargetSelector {
     variable: SelectorVariable,
     #[new(default)]
     distance: Option<Argument<MCRange>>,
+    #[new(default)]
+    limit: Option<Argument<u32>>,
+    #[new(default)]
+    sort: Option<Argument<Sort>>,
 }
 
 impl TargetSelector {
@@ -28,6 +32,14 @@ impl TargetSelector {
         MCRange: std::convert::From<T>,
     {
         self.distance = Some(Argument::new("distance", MCRange::from(distance)));
+        self
+    }
+    pub fn limit(mut self, limit: u32) -> Self {
+        self.limit = Some(Argument::new("limit", limit));
+        self
+    }
+    pub fn sort(mut self, sort: Sort) -> Self {
+        self.sort = Some(Argument::new("sort", sort));
         self
     }
 }

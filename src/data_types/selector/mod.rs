@@ -6,6 +6,7 @@ pub mod target;
 pub mod uuid;
 pub mod variable;
 
+pub use argument::*;
 pub use player::*;
 pub use target::*;
 pub use uuid::*;

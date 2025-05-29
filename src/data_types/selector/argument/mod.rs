@@ -1,3 +1,6 @@
+pub mod sort;
+pub use sort::*;
+
 use std::fmt::Display;
 
 #[derive(Debug)]
