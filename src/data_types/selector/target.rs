@@ -18,6 +18,27 @@ pub struct TargetSelector {
     limit: Option<Argument<u32>>,
     #[new(default)]
     sort: Option<Argument<Sort>>,
+    #[new(default)]
+    x: Option<Argument<f64>>,
+    #[new(default)]
+    y: Option<Argument<f64>>,
+    #[new(default)]
+    z: Option<Argument<f64>>,
+    #[new(default)]
+    dx: Option<Argument<f64>>,
+    #[new(default)]
+    dy: Option<Argument<f64>>,
+    #[new(default)]
+    dz: Option<Argument<f64>>,
+}
+
+macro_rules! setter {
+    ($name:ident, $type:ty) => {
+        pub fn $name(mut self, $name: $type) -> Self {
+            self.$name = Some(Argument::new("$name", $name));
+            self
+        }
+    };
 }
 
 impl TargetSelector {
@@ -38,10 +59,19 @@ impl TargetSelector {
         self.limit = Some(Argument::new("limit", limit));
         self
     }
-    pub fn sort(mut self, sort: Sort) -> Self {
-        self.sort = Some(Argument::new("sort", sort));
+    pub fn xyz(mut self, x: f64, y: f64, z: f64) -> Self {
+        self.x = Some(Argument::new("x", x));
+        self.y = Some(Argument::new("y", y));
+        self.z = Some(Argument::new("z", z));
         self
     }
+    setter!(sort, Sort);
+    setter!(x, f64);
+    setter!(y, f64);
+    setter!(z, f64);
+    setter!(dx, f64);
+    setter!(dy, f64);
+    setter!(dz, f64);
 }
 
 impl Selector for TargetSelector {}
