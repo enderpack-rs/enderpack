@@ -1,4 +1,5 @@
 use enderpack::prelude::*;
+use serde_json::json;
 
 fn main() {
     let player_selector = PlayerSelector::new("enderprism");
@@ -8,5 +9,12 @@ fn main() {
             .give(player_selector, resource::effect::Speed)
             .duration(4)
     );
-    let selector = TargetSelector::all().distance(..10.0);
+    let target_selector = TargetSelector::all().distance(..10.0);
+    println!(
+        "{}",
+        tellraw(
+            target_selector,
+            json!(["Some ",{"strikethrough":true,"text":"crossed"}," text"])
+        )
+    )
 }
