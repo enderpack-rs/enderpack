@@ -6,21 +6,21 @@ use derive_new::new;
 use crate::prelude::{Selector, resource::EffectResource};
 
 #[derive(new)]
-pub struct EffectGive {
-    selector: Selector,
+pub struct EffectGive<T: Selector> {
+    selector: T,
     effect: EffectResource,
     #[new(default)]
     duration: Option<i32>,
 }
 
-impl EffectGive {
+impl<T: Selector> EffectGive<T> {
     pub fn duration(mut self, duration: i32) -> Self {
         self.duration = Some(duration);
         self
     }
 }
 
-impl Display for EffectGive {
+impl<T: Selector> Display for EffectGive<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
