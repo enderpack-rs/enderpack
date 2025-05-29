@@ -1,22 +1,16 @@
+use std::fmt::Display;
+
 use case::CaseExt;
 use derive_new::new;
 
-use crate::data_types::resource::effect::EffectResource;
-use crate::data_types::selector::Selector;
-use std::fmt::Display;
-
-pub struct Effect;
-
-impl Effect {
-    pub fn give(self, selector: Selector, effect: EffectResource) -> EffectGive {
-        EffectGive::new(selector, effect)
-    }
-}
+use crate::prelude::{Selector, resource::EffectResource};
 
 #[derive(new)]
 pub struct EffectGive {
     selector: Selector,
     effect: EffectResource,
+    #[new(default)]
+    duration: Option<i32>,
 }
 
 impl Display for EffectGive {
@@ -29,10 +23,10 @@ impl Display for EffectGive {
                 EffectResource::Custom(name) => name.to_owned(),
                 _ => self.effect.to_string().to_snake(),
             }
-        )
+        )?;
+        for arg in [&self.duration].into_iter().flatten() {
+            write!(f, "{}", arg)?;
+        }
+        Ok(())
     }
-}
-
-pub fn effect() -> Effect {
-    Effect {}
 }
