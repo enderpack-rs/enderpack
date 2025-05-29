@@ -1,4 +1,4 @@
-use rust_dp::prelude::*;
+use enderpack::prelude::*;
 
 fn main() {
     let player_selector = PlayerSelector::new("enderprism");
