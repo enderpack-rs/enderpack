@@ -1,8 +1,6 @@
-use rust_dp::commands::effect::*;
-use rust_dp::data_types::resource::effect::EffectResource::*;
-use rust_dp::data_types::selector::*;
+use rust_dp::prelude::*;
 
 fn main() {
-    let selector = all().distance(1.0..2.0);
-    println!("{}", effect().give(selector, Speed));
+    let selector = selector::all().distance(1.0..2.0);
+    println!("{}", effect().give(selector, resource::effect::Speed));
 }
