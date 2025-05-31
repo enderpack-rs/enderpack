@@ -41,13 +41,14 @@ macro_rules! setter {
     };
 }
 
+pub fn all() -> TargetSelector {
+    TargetSelector::new(SelectorVariable::E)
+}
+pub fn all_players() -> TargetSelector {
+    TargetSelector::new(SelectorVariable::A)
+}
+
 impl TargetSelector {
-    pub fn all() -> Self {
-        Self::new(SelectorVariable::E)
-    }
-    pub fn all_players() -> Self {
-        Self::new(SelectorVariable::A)
-    }
     pub fn distance<T>(mut self, distance: T) -> Self
     where
         MCRange: std::convert::From<T>,

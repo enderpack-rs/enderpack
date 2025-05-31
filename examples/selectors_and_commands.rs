@@ -9,7 +9,7 @@ fn main() {
             .give(player_selector, resource::effect::Speed)
             .duration(4)
     );
-    let target_selector = TargetSelector::all().distance(..10.0);
+    let target_selector = all().distance(..10.0);
     println!(
         "{}",
         tellraw(
