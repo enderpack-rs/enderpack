@@ -2,8 +2,7 @@ pub mod give;
 
 use give::EffectGive;
 
-use crate::data_types::resource::effect::EffectResource;
-use crate::data_types::selector::Selector;
+use crate::prelude::{Selector, resource::EffectResource};
 
 pub struct Effect;
 

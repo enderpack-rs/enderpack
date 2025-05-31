@@ -3,7 +3,7 @@ use std::fmt::Display;
 use case::CaseExt;
 use derive_new::new;
 
-use crate::prelude::{Selector, resource::EffectResource};
+use crate::prelude::{Command, Selector, resource::EffectResource};
 
 #[derive(new)]
 pub struct EffectGive<T: Selector> {
@@ -19,6 +19,8 @@ impl<T: Selector> EffectGive<T> {
         self
     }
 }
+
+impl<T: Selector> Command for EffectGive<T> {}
 
 impl<T: Selector> Display for EffectGive<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
