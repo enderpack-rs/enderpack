@@ -26,11 +26,11 @@ impl<T: Selector> Display for EffectGive<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(
             f,
-            "effect give {} minecraft:{}",
+            "effect give {} {}",
             self.selector,
             match &self.effect {
                 EffectResource::Custom(name) => name.to_owned(),
-                _ => self.effect.to_string().to_snake(),
+                _ => format!("minecraft:{}", self.effect.to_string().to_snake()),
             }
         )?;
         for arg in [&self.duration].into_iter().flatten() {
