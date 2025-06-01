@@ -1,8 +1,10 @@
 pub mod effect;
+pub mod scoreboard;
 pub mod tellraw;
 use std::fmt::Display;
 
 pub use effect::*;
+pub use scoreboard::*;
 pub use tellraw::*;
 
 pub trait Command: Display {}
