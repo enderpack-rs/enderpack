@@ -10,6 +10,7 @@ fn main() {
 #[func]
 fn load() {
     tellraw(all(), json!("hi!"));
+    effect().give(all(), resource::EffectResource::Speed);
 }
 
 // will expand to
