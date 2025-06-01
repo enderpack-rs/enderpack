@@ -44,11 +44,14 @@ impl Function {
     pub fn add_scoreboard(self, name: &str, value_opt: Option<i32>) -> Self {
         let path = self.path.as_ref().unwrap().replace("::", ".");
         let path = format!("{}.{}", path, self.name);
-        let self_binding = self.add_command(
-            scoreboard()
-                .objectives()
-                .add(path.as_str(), resource::Criteria::Dummy),
-        );
+        let declaration = scoreboard()
+            .objectives()
+            .add(path.as_str(), resource::Criteria::Dummy);
+        let self_binding = if !self.body.contains(&declaration.to_string()) {
+            self.add_command(declaration)
+        } else {
+            self
+        };
         match value_opt {
             Some(value) => self_binding.add_command(scoreboard().players().set(
                 PlayerSelector::new(name),
