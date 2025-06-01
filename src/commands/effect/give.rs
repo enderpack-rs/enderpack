@@ -3,12 +3,12 @@ use std::fmt::Display;
 use case::CaseExt;
 use derive_new::new;
 
-use crate::prelude::{Command, Selector, resource::EffectResource};
+use crate::prelude::{Command, Selector, resource};
 
 #[derive(new)]
 pub struct EffectGive<T: Selector> {
     selector: T,
-    effect: EffectResource,
+    effect: resource::Effect,
     #[new(default)]
     duration: Option<i32>,
 }
@@ -29,7 +29,7 @@ impl<T: Selector> Display for EffectGive<T> {
             "effect give {} {}",
             self.selector,
             match &self.effect {
-                EffectResource::Custom(name) => name.to_owned(),
+                resource::Effect::Custom(name) => name.to_owned(),
                 _ => format!("minecraft:{}", self.effect.to_string().to_snake()),
             }
         )?;

@@ -47,7 +47,7 @@ impl Function {
         let self_binding = self.add_command(
             scoreboard()
                 .objectives()
-                .add(path.as_str(), resource::Dummy),
+                .add(path.as_str(), resource::Criteria::Dummy),
         );
         match value_opt {
             Some(value) => self_binding.add_command(scoreboard().players().set(
