@@ -10,7 +10,7 @@ fn main() {
 #[func]
 fn load() {
     tellraw(all(), json!("hi!"));
-    effect().give(all(), resource::EffectResource::Speed);
+    effect().give(all(), resource::Effect::Speed);
     scoreboard()
         .objectives()
         .add("test", resource::Criteria::Dummy);
