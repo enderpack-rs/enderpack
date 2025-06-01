@@ -42,6 +42,7 @@ impl Function {
         self
     }
     pub fn add_scoreboard(self, name: &str, value_opt: Option<i32>) -> Self {
+        let name = format!(".{name}");
         let path = self.path.as_ref().unwrap().replace("::", ".");
         let path = format!("{}.{}", path, self.name);
         let declaration = scoreboard()
@@ -54,7 +55,7 @@ impl Function {
         };
         match value_opt {
             Some(value) => self_binding.add_command(scoreboard().players().set(
-                PlayerSelector::new(name),
+                PlayerSelector::new(name.as_str()),
                 path.as_str(),
                 value,
             )),
