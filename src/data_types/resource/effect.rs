@@ -1,7 +1,5 @@
-pub use EffectResource::*;
-
 #[derive(strum::Display)]
-pub enum EffectResource {
+pub enum Effect {
     Speed,
     Slowness,
     Custom(String),

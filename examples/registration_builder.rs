@@ -10,8 +10,10 @@ fn main() {
 #[func]
 fn load() {
     tellraw(all(), json!("hi!"));
-    effect().give(all(), resource::Speed);
-    scoreboard().objectives().add("test", resource::Dummy);
+    effect().give(all(), resource::EffectResource::Speed);
+    scoreboard()
+        .objectives()
+        .add("test", resource::Criteria::Dummy);
     let test2 = 0;
     let test3 = -10;
 }

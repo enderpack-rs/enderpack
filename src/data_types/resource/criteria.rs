@@ -1,5 +1,3 @@
-pub use Criteria::*;
-
 #[derive(strum::Display)]
 pub enum Criteria {
     Dummy,

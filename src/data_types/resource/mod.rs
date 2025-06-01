@@ -1,5 +1,5 @@
+pub mod criteria;
 pub mod effect;
-pub mod scoreboard;
 
+pub use criteria::*;
 pub use effect::*;
-pub use scoreboard::*;
