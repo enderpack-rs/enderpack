@@ -37,10 +37,20 @@ version = "0.1.0"
 dependencies = [
  "case",
  "derive-new",
+ "enderpack_macro",
  "serde",
  "serde_json",
  "strum",
  "uuid",
+]
+
+[[package]]
+name = "enderpack_macro"
+version = "0.1.0"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

@@ -4,6 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+enderpack_macro = { path = "./enderpack_macro" }
 case = "1.0.0"
 derive-new = "0.7.0"
 serde = "1.0.219"
