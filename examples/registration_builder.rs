@@ -1,4 +1,4 @@
-use enderpack::prelude::{target::all, *};
+use enderpack::prelude::*;
 use serde_json::json;
 
 fn main() {
@@ -7,18 +7,17 @@ fn main() {
     println!("{:#?}", dp);
 }
 
-// #[func]
-// fn load() {
-//     tellraw(TargetSelector::all(), json!("hi!"))
-// }
-//
-// will expand to
-
-fn load() -> Function {
-    Function::new(stringify!(load))
-        .set_path(module_path!())
-        .add_command(tellraw(all().distance(..5.0), json!("hi!")))
+#[func]
+fn load() {
+    tellraw(all(), json!("hi!"));
 }
+
+// will expand to
+// fn load() -> Function {
+//     Function::new(stringify!(load))
+//         .set_path(module_path!())
+//         .add_command(tellraw(all().distance(..5.0), json!("hi!")))
+// }
 
 // `registration_builder` is an example, and Rust treats each example
 // as a separate crate. We are at the root of this crate.
