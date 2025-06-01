@@ -12,6 +12,8 @@ fn load() {
     tellraw(all(), json!("hi!"));
     effect().give(all(), resource::Speed);
     scoreboard().objectives().add("test", resource::Dummy);
+    let test2 = 0;
+    let test3 = -10;
 }
 
 // will expand to
