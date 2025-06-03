@@ -11,7 +11,7 @@ pub fn wrap_statement(statement: Stmt) -> syn::Result<TokenStream2> {
             let name = crate::helpers::get_variable_name(&local.pat)?;
             let init = &local.init;
             match init {
-                Some(local_init) => handle_let(local_init, name),
+                Some(local_init) => handle_let(local_init, &name),
                 None => Err(Error::new_spanned(
                     &local,
                     "Let binding needs to be initalized",
@@ -22,7 +22,7 @@ pub fn wrap_statement(statement: Stmt) -> syn::Result<TokenStream2> {
     }
 }
 
-fn handle_let(local_init: &LocalInit, name: String) -> syn::Result<TokenStream2> {
+fn handle_let(local_init: &LocalInit, name: &str) -> syn::Result<TokenStream2> {
     match local_init.expr.deref() {
         // Unsigned
         Expr::Lit(expr_lit) => parse_litteral(expr_lit, name, false),
@@ -35,7 +35,7 @@ fn handle_let(local_init: &LocalInit, name: String) -> syn::Result<TokenStream2>
     }
 }
 
-fn parse_unary(expr_unary: &ExprUnary, name: String) -> syn::Result<TokenStream2> {
+fn parse_unary(expr_unary: &ExprUnary, name: &str) -> syn::Result<TokenStream2> {
     match expr_unary.op {
         UnOp::Neg(_) => match expr_unary.expr.deref() {
             Expr::Lit(expr_lit) => parse_litteral(expr_lit, name, true),
@@ -49,7 +49,7 @@ fn parse_unary(expr_unary: &ExprUnary, name: String) -> syn::Result<TokenStream2
     }
 }
 
-fn parse_litteral(expr_lit: &ExprLit, name: String, negative: bool) -> syn::Result<TokenStream2> {
+fn parse_litteral(expr_lit: &ExprLit, name: &str, negative: bool) -> syn::Result<TokenStream2> {
     match &expr_lit.lit {
         Lit::Int(int) => {
             if negative {
