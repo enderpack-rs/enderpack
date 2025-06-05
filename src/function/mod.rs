@@ -37,30 +37,26 @@ impl Function {
         self.module = Some(module);
         self
     }
-    pub fn add_command<T: Command>(mut self, command: T) -> Self {
+    pub fn add_command<T: Command>(&mut self, command: T) -> &Self {
         self.body.push(command.to_string());
         self
     }
-    pub fn add_scoreboard(self, name: &str, value_opt: Option<i32>) -> Self {
+    pub fn add_scoreboard(&mut self, name: &str, value_opt: Option<i32>) -> &Self {
         let name = format!(".{name}");
         let path = self.path.as_ref().unwrap().replace("::", ".");
         let path = format!("{}.{}", path, self.name);
         let declaration = scoreboard()
             .objectives()
             .add(path.as_str(), resource::Criteria::Dummy);
-        let self_binding = if !self.body.contains(&declaration.to_string()) {
-            self.add_command(declaration)
-        } else {
-            self
-        };
-        match value_opt {
-            Some(value) => self_binding.add_command(scoreboard().players().set(
+        self.add_command(declaration);
+        if let Some(value) = value_opt {
+            self.add_command(scoreboard().players().set(
                 PlayerSelector::new(name.as_str()),
                 path.as_str(),
                 value,
-            )),
-            None => self_binding,
+            ));
         }
+        self
     }
     pub fn add_storage(&mut self) -> &Self {
         todo!()
