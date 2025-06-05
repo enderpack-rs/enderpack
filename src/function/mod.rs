@@ -3,7 +3,7 @@ pub use tag::*;
 
 use std::{fmt::Display, ops::Deref};
 
-use crate::prelude::{Command, PlayerSelector, Variable, resource, scoreboard};
+use crate::prelude::{Command, Variable};
 
 #[derive(Debug)]
 pub struct Function {
