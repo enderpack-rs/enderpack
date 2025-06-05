@@ -18,17 +18,9 @@ fn load() {
     let a2: Score = -10;
     let a3: Score = 9 + 10;
     let b: Score = a2;
-    // let c: Score = b + 12;
-    // let d: Score = 32 + c;
+    // let c: Score = b + 12; // Not implemented
+    // let d: Score = 32 + c; // Not implemented
 }
-
-// will expand to
-// fn load() -> Function {
-//     Function::new(stringify!(load))
-//         .set_path(module_path!())
-//         .add_command(tellraw(all(), json!("hi!")))
-//         .add_command(effect().give(all(), resource::EffectResource::Speed))
-// }
 
 // `registration_builder` is an example, and Rust treats each example
 // as a separate crate. We are at the root of this crate.
