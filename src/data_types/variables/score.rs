@@ -1,5 +1,8 @@
+use std::ops::Deref;
+
 use crate::prelude::{
-    Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd, resource, scoreboard,
+    Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd,
+    players::set::ScoreboardPlayersSet, resource, scoreboard,
 };
 
 use super::{Variable, VariableInit};
@@ -9,7 +12,7 @@ pub struct Score {
     path: String,
     /// Full path, formatted like module_path.function
     declaration: ScoreboardObjectivesAdd,
-    stack: Vec<Box<dyn Command>>,
+    init: Box<dyn Command>, // Can be a ScoreboardPlayersSet or ScoreboardPlayersOperation
 }
 
 impl VariableInit<i32> for Score {
@@ -18,16 +21,16 @@ impl VariableInit<i32> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(path, resource::Criteria::Dummy);
-        let stack: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().set(
+        let init = Box::new(scoreboard().players().set(
             PlayerSelector::new(&fake_player_name),
             path,
             value,
-        ))];
+        ));
         Self {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
-            stack,
+            init,
         }
     }
 }
@@ -38,23 +41,18 @@ impl VariableInit<Score> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(path, resource::Criteria::Dummy);
-        let mut stack: Vec<Box<dyn Command>> = value.stack;
-        stack.push(Box::new(scoreboard().players().operation(
+        let init = Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
             path,
             "=",
-            if stack.is_empty() {
-                PlayerSelector::new(&value.name)
-            } else {
-                PlayerSelector::new(".eax")
-            },
+            PlayerSelector::new(&value.name),
             path,
-        )));
+        ));
         Self {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
-            stack,
+            init,
         }
     }
 }
@@ -63,7 +61,7 @@ impl Variable for Score {
     fn get_declaration(&self) -> &impl Command {
         &self.declaration
     }
-    fn get_stack(&self) -> &Vec<Box<dyn Command>> {
-        &self.stack
+    fn get_init(&self) -> &(impl Command + ?Sized) {
+        self.init.deref()
     }
 }

@@ -1,7 +1,7 @@
 pub mod tag;
 pub use tag::*;
 
-use std::{fmt::Display, ops::Deref};
+use std::fmt::Display;
 
 use crate::prelude::{Command, Variable};
 
@@ -45,9 +45,7 @@ impl Function {
         if !self.body.contains(&variable.get_declaration().to_string()) {
             self.add_command(variable.get_declaration());
         }
-        variable.get_stack().iter().for_each(|command| {
-            self.add_command(command.deref());
-        });
+        self.add_command(variable.get_init());
         self
     }
 }
