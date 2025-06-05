@@ -2,7 +2,6 @@ mod function_builder;
 mod helpers;
 
 use proc_macro::TokenStream;
-use proc_macro2::TokenStream as TokenStream2;
 use quote::quote;
 use syn::*;
 
@@ -30,19 +29,4 @@ pub fn func(_args: TokenStream, item: TokenStream) -> TokenStream {
         }
     };
     make_func.into()
-}
-
-trait LetHandler {
-    fn handle_local_init(
-        &self,
-        local_init: &LocalInit,
-        name: &Ident,
-    ) -> syn::Result<Vec<TokenStream2>>;
-    fn parse_unary(&self, expr_unary: &ExprUnary, name: &Ident) -> syn::Result<Vec<TokenStream2>>;
-    fn parse_litteral(
-        &self,
-        expr_lit: &ExprLit,
-        name: &Ident,
-        negative: bool,
-    ) -> syn::Result<Vec<TokenStream2>>;
 }
