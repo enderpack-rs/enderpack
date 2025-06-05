@@ -2,7 +2,7 @@ use crate::prelude::{
     Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd, resource, scoreboard,
 };
 
-use super::Variable;
+use super::{Variable, VariableInit};
 
 pub struct Score {
     path: String,
@@ -11,8 +11,8 @@ pub struct Score {
     stack: Vec<Box<dyn Command>>,
 }
 
-impl Score {
-    pub fn new(name: &str, path: &str, value: i32) -> Score {
+impl VariableInit<i32> for Score {
+    fn new(name: &str, path: &str, value: i32) -> Self {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
@@ -22,7 +22,7 @@ impl Score {
             path,
             value,
         ))];
-        Score {
+        Self {
             path: path.to_owned(),
             declaration,
             stack,
