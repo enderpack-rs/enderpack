@@ -10,8 +10,10 @@ pub use tellraw::*;
 pub trait Command: Display {}
 
 #[macro_export]
-macro_rules! command_setup {
+macro_rules! factory {
     ($struct:ident => $function:ident) => {
+        pub struct $struct;
+
         pub fn $function() -> $struct {
             $struct {}
         }
@@ -19,7 +21,7 @@ macro_rules! command_setup {
 }
 
 #[macro_export]
-macro_rules! subcommand_setup {
+macro_rules! subcommands {
     ($struct:ident {
         $(unit {
             $($unit_c:ident() => $unit_s:ident),*
@@ -48,5 +50,54 @@ macro_rules! subcommand_setup {
                 }
             )*)*
         }
+    };
+}
+
+#[macro_export]
+macro_rules! arguments {
+    ($struct:ident => $as_string:literal {
+        $($(#[$attr:meta])? $arg_name:ident: $arg_type:ty),+
+    }) => {
+        pub struct $struct {
+            $(
+                $(#[$attr])?
+                $arg_name: $arg_type
+            ),+
+        }
+
+        impl std::fmt::Display for $struct {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", $as_string)?;
+                $(
+                    write!(f, " {}", $arg_name)?;
+                ),+
+                Ok(())
+            }
+        }
+
+        impl $crate::commands::Command for $struct {}
+    };
+    ($struct:ident with $generic:ident => $as_string:literal {
+        $($(#[$attr:meta])? $arg_name:ident: $arg_type:ty),+
+    }) => {
+        #[derive(derive_new::new)]
+        pub struct $struct<T: $generic> {
+            $(
+                $(#[$attr])?
+                $arg_name: $arg_type
+            ),+
+        }
+
+        impl<T: $generic> std::fmt::Display for $struct<T> {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                write!(f, "{}", $as_string)?;
+                $(
+                    write!(f, " {}", self.$arg_name)?;
+                )+
+                Ok(())
+            }
+        }
+
+        impl<T: $generic> $crate::commands::Command for $struct<T> {}
     };
 }
