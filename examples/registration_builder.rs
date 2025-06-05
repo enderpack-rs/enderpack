@@ -14,8 +14,12 @@ fn load() {
     scoreboard()
         .objectives()
         .add("test", resource::Criteria::Dummy);
-    let test2 = 0;
-    let test3 = -10;
+    let a1: Score = 0;
+    let a2: Score = -10;
+    let a3: Score = 9 + 10;
+    let b: Score = a2;
+    // let c: Score = b + 12;
+    // let d: Score = 32 + c;
 }
 
 // will expand to
