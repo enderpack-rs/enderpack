@@ -1,13 +1,14 @@
-use std::ops::Deref;
+use std::ops::{Add, Deref};
 
 use crate::prelude::{
-    Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd, resource, scoreboard,
+    Command, PlayerSelector, TargetSelector, objectives::ScoreboardObjectivesAdd, resource,
+    scoreboard,
 };
 
 use super::{Variable, VariableInit};
 
 pub struct Score {
-    pub name: String,
+    name: String,
     path: String,
     /// Full path, formatted like module_path.function
     declaration: ScoreboardObjectivesAdd,
@@ -87,3 +88,26 @@ impl Variable for Score {
         &self.init
     }
 }
+
+// impl Add<i32> for Score {
+//     type Output = Vec<Box<dyn Command>>;
+//     fn add(self, rhs: i32) -> Self::Output {
+//         let eax = PlayerSelector::new(".eax");
+//         vec![
+//             Box::new(scoreboard().players().operation(
+//                 eax,
+//                 &self.path,
+//                 "=",
+//                 PlayerSelector::new(&self.name),
+//                 &self.path,
+//             )),
+//             Box::new(scoreboard().players().operation(
+//                 eax,
+//                 &self.path,
+//                 "+=",
+//                 ,
+//                 source_objective,
+//             )),
+//         ]
+//     }
+// }

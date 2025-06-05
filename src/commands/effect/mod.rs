@@ -3,15 +3,13 @@ pub mod give;
 use give::EffectGive;
 
 use crate::{
-    command_setup,
+    factory,
     prelude::{Selector, resource},
-    subcommand_setup,
+    subcommands,
 };
 
-pub struct Effect;
-
-command_setup!(Effect => effect);
-subcommand_setup!(Effect {
+factory!(Effect => effect);
+subcommands!(Effect {
     new with Selector {
         give(selector: T, effect: resource::Effect) => EffectGive
     };

@@ -1,14 +1,8 @@
-use operation::ScoreboardPlayersOperation;
-use set::ScoreboardPlayersSet;
-
-use crate::{prelude::Selector, subcommand_setup};
-
-pub mod operation;
-pub mod set;
+use crate::{arguments, prelude::Selector, subcommands};
 
 pub struct ScoreboardPlayers;
 
-subcommand_setup!(ScoreboardPlayers {
+subcommands!(ScoreboardPlayers {
     new with Selector {
         set(selector: T, objective: &str, score: i32) => ScoreboardPlayersSet,
         operation(
@@ -18,5 +12,27 @@ subcommand_setup!(ScoreboardPlayers {
             source: T,
             source_objective: &str
         ) => ScoreboardPlayersOperation
+    };
+});
+
+arguments!(ScoreboardPlayersSet with T: Selector => "scoreboard players set" {
+    required {
+        selector: T,
+        #[new(into)]
+        objective: String,
+        score: i32
+    };
+});
+
+arguments!(ScoreboardPlayersOperation with T: Selector => "scoreboard players operation" {
+    required {
+        target: T,
+        #[new(into)]
+        target_objective: String,
+        #[new(into)]
+        operation: String,
+        source: T,
+        #[new(into)]
+        source_objective: String
     };
 });

@@ -1,21 +1,26 @@
-use add::ScoreboardObjectivesAdd;
-use list::ScoreboardObjectivesList;
-
-use crate::{prelude::resource, subcommand_setup};
-
-pub mod add;
-pub mod list;
-pub mod modify;
-pub mod remove;
-pub mod setdisplay;
+use crate::{arguments, prelude::resource, subcommands};
+use derive_new::new;
 
 pub struct ScoreboardObjectives;
 
-subcommand_setup!(ScoreboardObjectives {
+subcommands!(ScoreboardObjectives {
     unit {
         list() => ScoreboardObjectivesList
     };
     new {
         add(objective: &str, criteria: resource::Criteria) => ScoreboardObjectivesAdd
+    };
+});
+
+arguments!(ScoreboardObjectivesList => "scoreboard objectives" {});
+
+arguments!(ScoreboardObjectivesAdd => "scoreboard objectives add" {
+    required {
+        #[new(into)]
+        objective: String,
+        criteria: resource::Criteria
+    };
+    optional {
+        display_name: String
     };
 });

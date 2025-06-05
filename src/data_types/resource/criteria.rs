@@ -1,4 +1,5 @@
 #[derive(strum::Display)]
+#[strum(serialize_all = "lowercase")]
 pub enum Criteria {
     Dummy,
     Trigger,
