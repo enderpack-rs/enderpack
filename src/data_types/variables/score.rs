@@ -12,6 +12,7 @@ pub struct Score {
     path: String,
     /// Full path, formatted like module_path.function
     declaration: ScoreboardObjectivesAdd,
+    pre_init: Vec<Box<dyn Command>>,
     init: Box<dyn Command>, // Can be a ScoreboardPlayersSet or ScoreboardPlayersOperation
 }
 
@@ -30,6 +31,7 @@ impl VariableInit<i32> for Score {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
+            pre_init: vec![],
             init,
         }
     }
@@ -52,6 +54,30 @@ impl VariableInit<Score> for Score {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
+            pre_init: vec![],
+            init,
+        }
+    }
+}
+
+impl VariableInit<Vec<Box<dyn Command>>> for Score {
+    fn new(name: &str, path: &str, value: Vec<Box<dyn Command>>) -> Self {
+        let fake_player_name = format!(".{name}");
+        let declaration = scoreboard()
+            .objectives()
+            .add(path, resource::Criteria::Dummy);
+        let init = Box::new(scoreboard().players().operation(
+            PlayerSelector::new(&fake_player_name),
+            path,
+            "=",
+            PlayerSelector::new(".eax"),
+            path,
+        ));
+        Self {
+            name: fake_player_name,
+            path: path.to_owned(),
+            declaration,
+            pre_init: value,
             init,
         }
     }
@@ -63,5 +89,8 @@ impl Variable for Score {
     }
     fn get_init(&self) -> &(impl Command + ?Sized) {
         self.init.deref()
+    }
+    fn get_pre_init(&self) -> &Vec<Box<dyn Command>> {
+        &self.pre_init
     }
 }
