@@ -1,8 +1,7 @@
 use std::ops::Deref;
 
 use crate::prelude::{
-    Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd,
-    players::set::ScoreboardPlayersSet, resource, scoreboard,
+    Command, PlayerSelector, objectives::add::ScoreboardObjectivesAdd, resource, scoreboard,
 };
 
 use super::{Variable, VariableInit};
