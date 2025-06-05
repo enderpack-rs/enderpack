@@ -10,6 +10,5 @@ pub trait VariableInit<T> {
 
 pub trait Variable {
     fn get_declaration(&self) -> &impl Command;
-    fn get_init(&self) -> &(impl Command + ?Sized);
-    fn get_pre_init(&self) -> &Vec<Box<dyn Command>>;
+    fn get_init(&self) -> &Vec<Box<dyn Command>>;
 }

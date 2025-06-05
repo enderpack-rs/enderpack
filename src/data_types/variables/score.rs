@@ -12,8 +12,7 @@ pub struct Score {
     path: String,
     /// Full path, formatted like module_path.function
     declaration: ScoreboardObjectivesAdd,
-    pre_init: Vec<Box<dyn Command>>,
-    init: Box<dyn Command>, // Can be a ScoreboardPlayersSet or ScoreboardPlayersOperation
+    init: Vec<Box<dyn Command>>, // Can be a ScoreboardPlayersSet or ScoreboardPlayersOperation
 }
 
 impl VariableInit<i32> for Score {
@@ -22,16 +21,15 @@ impl VariableInit<i32> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(path, resource::Criteria::Dummy);
-        let init = Box::new(scoreboard().players().set(
+        let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().set(
             PlayerSelector::new(&fake_player_name),
             path,
             value,
-        ));
+        ))];
         Self {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
-            pre_init: vec![],
             init,
         }
     }
@@ -43,18 +41,17 @@ impl VariableInit<Score> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(path, resource::Criteria::Dummy);
-        let init = Box::new(scoreboard().players().operation(
+        let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
             path,
             "=",
             PlayerSelector::new(&value.name),
             path,
-        ));
+        ))];
         Self {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
-            pre_init: vec![],
             init,
         }
     }
@@ -66,18 +63,18 @@ impl VariableInit<Vec<Box<dyn Command>>> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(path, resource::Criteria::Dummy);
-        let init = Box::new(scoreboard().players().operation(
+        let mut init = value;
+        init.push(Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
             path,
             "=",
             PlayerSelector::new(".eax"),
             path,
-        ));
+        )));
         Self {
             name: fake_player_name,
             path: path.to_owned(),
             declaration,
-            pre_init: value,
             init,
         }
     }
@@ -87,10 +84,7 @@ impl Variable for Score {
     fn get_declaration(&self) -> &impl Command {
         &self.declaration
     }
-    fn get_init(&self) -> &(impl Command + ?Sized) {
-        self.init.deref()
-    }
-    fn get_pre_init(&self) -> &Vec<Box<dyn Command>> {
-        &self.pre_init
+    fn get_init(&self) -> &Vec<Box<dyn Command>> {
+        &self.init
     }
 }
