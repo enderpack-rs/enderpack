@@ -41,7 +41,7 @@ impl Function {
         self.body.push(command.to_string());
         self
     }
-    pub fn add_variable<T: Variable>(&mut self, variable: T) -> &Self {
+    pub fn add_variable<T: Variable>(&mut self, variable: &T) -> &Self {
         if !self.body.contains(&variable.get_declaration().to_string()) {
             self.add_command(variable.get_declaration());
         }
