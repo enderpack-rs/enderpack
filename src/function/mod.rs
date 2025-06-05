@@ -50,28 +50,6 @@ impl Function {
         });
         self
     }
-    pub fn add_scoreboard(&mut self, name: &str, value_opt: Option<i32>) -> &Self {
-        let name = format!(".{name}");
-        let path = self.path.replace("::", ".");
-        let path = format!("{}.{}", path, self.name);
-        let declaration = scoreboard()
-            .objectives()
-            .add(path.as_str(), resource::Criteria::Dummy);
-        if !self.body.contains(&declaration.to_string()) {
-            self.add_command(&declaration);
-        }
-        if let Some(value) = value_opt {
-            self.add_command(&scoreboard().players().set(
-                PlayerSelector::new(name.as_str()),
-                path.as_str(),
-                value,
-            ));
-        }
-        self
-    }
-    pub fn add_storage(&mut self) -> &Self {
-        todo!()
-    }
 }
 
 impl Command for Function {}
