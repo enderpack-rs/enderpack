@@ -56,21 +56,36 @@ macro_rules! subcommands {
 #[macro_export]
 macro_rules! arguments {
     ($struct:ident => $as_string:literal {
-        $($(#[$attr:meta])? $arg_name:ident: $arg_type:ty),+
+        $(required {
+            $($(#[$req_attr:meta])* $req_arg_name:ident: $req_arg_type:ty),+
+        };)?
+        $(optional {
+            $($(#[$opt_attr:meta])* $opt_arg_name:ident: $opt_arg_type:ty),+
+        };)?
     }) => {
         pub struct $struct {
-            $(
-                $(#[$attr])?
-                $arg_name: $arg_type
-            ),+
+            $($(
+                $(#[$req_attr])*
+                $req_arg_name: $req_arg_type
+            ),+)?
+            $($(
+                $(#[$opt_attr])*
+                #[new(default)]
+                $opt_arg_name: Option<$opt_arg_type>
+            ),+)?
         }
 
         impl std::fmt::Display for $struct {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{}", $as_string)?;
-                $(
-                    write!(f, " {}", $arg_name)?;
-                ),+
+                $($(
+                    write!(f, " {}", $req_arg_name)?;
+                ),+)?
+                $($(
+                    if let Some(some_$opt_arg_name) = $opt_arg_name {
+                        write!(f, " {}", some_$opt_arg_name)?;
+                    }
+                )+)?
                 Ok(())
             }
         }
@@ -78,22 +93,37 @@ macro_rules! arguments {
         impl $crate::commands::Command for $struct {}
     };
     ($struct:ident with $generic:ident => $as_string:literal {
-        $($(#[$attr:meta])? $arg_name:ident: $arg_type:ty),+
+        $(required {
+            $($(#[$req_attr:meta])* $req_arg_name:ident: $req_arg_type:ty),+
+        };)?
+        $(optional {
+            $($(#[$opt_attr:meta])* $opt_arg_name:ident: $opt_arg_type:ty),+
+        };)?
     }) => {
         #[derive(derive_new::new)]
         pub struct $struct<T: $generic> {
-            $(
-                $(#[$attr])?
-                $arg_name: $arg_type
-            ),+
+            $($(
+                $(#[$req_attr])*
+                $req_arg_name: $req_arg_type
+            ),+)?
+            $($(
+                $(#[$opt_attr])*
+                #[new(default)]
+                $opt_arg_name: Option<$opt_arg_type>
+            ),+)?
         }
 
         impl<T: $generic> std::fmt::Display for $struct<T> {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{}", $as_string)?;
-                $(
-                    write!(f, " {}", self.$arg_name)?;
-                )+
+                $($(
+                    write!(f, " {}", self.$req_arg_name)?;
+                )+)?
+                $($(
+                    if let Some(some_$opt_arg_name) = $opt_arg_name {
+                        write!(f, " {}", some_$opt_arg_name)?;
+                    }
+                )+)?
                 Ok(())
             }
         }
