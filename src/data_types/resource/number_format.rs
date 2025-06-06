@@ -1,19 +1,11 @@
-use std::fmt::Display;
-
+#[derive(strum::Display)]
 pub enum NumberFormat {
+    #[strum(to_string = "")]
     Reset,
+    #[strum(to_string = "blank")]
     Blank,
+    #[strum(to_string = "fixed {0}")]
     Fixed(serde_json::Value),
+    #[strum(to_string = "styled {0}")]
     Styled(serde_json::Value),
-}
-
-impl Display for NumberFormat {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Reset => Ok(()),
-            Self::Blank => write!(f, "blank"),
-            Self::Fixed(contents) => write!(f, "fixed {}", contents),
-            Self::Styled(style) => write!(f, "styled {}", style),
-        }
-    }
 }
