@@ -3,6 +3,10 @@ use crate::{arguments, data_types::resource, prelude::Selector, subcommands};
 pub struct ScoreboardPlayers;
 
 subcommands!(ScoreboardPlayers {
+    unit {
+        display() => ScoreboardPlayersDisplay,
+        list() => ScoreboardPlayersList
+    };
     new with Selector {
         set(target: T, objective: resource::Objective, score: i32) => ScoreboardPlayersSet,
         operation(
@@ -12,7 +16,6 @@ subcommands!(ScoreboardPlayers {
             source: T,
             source_objective: resource::Objective
         ) => ScoreboardPlayersOperation,
-        list() => ScoreboardPlayersList,
         get(target: T, objective: resource::Objective) => ScoreboardPlayersGet,
         add(target: T, objective: resource::Objective, score: i32) => ScoreboardPlayersAdd,
         remove(target: T, objective: resource::Objective, score: i32) => ScoreboardPlayersRemove,
@@ -41,8 +44,16 @@ arguments!(ScoreboardPlayersOperation with T: Selector => "scoreboard players op
     };
 });
 
-arguments!(ScoreboardPlayersList with T: Selector => "scoreboard players list" {
-    optional {
+arguments!(ScoreboardPlayersList => "scoreboard players list" {});
+
+subcommands!(ScoreboardPlayersList {
+    new with Selector {
+        target(target: T) => ScoreboardPlayersListTarget
+    };
+});
+
+arguments!(ScoreboardPlayersListTarget with T: Selector => "scoreboard players list" {
+    required {
         target: T
     };
 });
@@ -90,5 +101,29 @@ arguments!(ScoreboardPlayersEnable with T: Selector => "scoreboard players enabl
     required {
         target: T,
         objective: resource::Objective
+    };
+});
+
+pub struct ScoreboardPlayersDisplay;
+
+subcommands!(ScoreboardPlayersDisplay {
+    new with Selector {
+        name(target: T, objective: resource::Objective) => ScoreboardPlayersDisplayName,
+        number_format(target: T, objective: resource::Objective, format: resource::NumberFormat) => ScoreboardPlayersDisplayNumberformat
+    };
+});
+
+arguments!(ScoreboardPlayersDisplayName with T: Selector => "scoreboard players display name"{
+    required {
+        target: T,
+        objective: resource::Objective
+    };
+});
+
+arguments!(ScoreboardPlayersDisplayNumberformat with T: Selector => "scoreboard players display numberfomat" {
+    required {
+        target: T,
+        objective: resource::Objective,
+        format: resource::NumberFormat
     };
 });
