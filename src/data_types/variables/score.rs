@@ -2,7 +2,7 @@ use std::ops::{Add, Deref};
 
 use crate::prelude::{
     Command, PlayerSelector, TargetSelector,
-    objectives::ScoreboardObjectivesAdd,
+    objectives::add::ScoreboardObjectivesAdd,
     resource::{self, Objective},
     scoreboard,
 };
