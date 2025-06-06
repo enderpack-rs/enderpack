@@ -16,7 +16,7 @@ pub fn wrap_statement(statement: Stmt) -> syn::Result<Vec<TokenStream2>> {
 
 fn handle_let(local: Local) -> syn::Result<Vec<TokenStream2>> {
     let Pat::Type(pat_type) = &local.pat else {
-        return Err(Error::new_spanned(local.pat, "Missing explicit type"));
+        return Ok(vec![quote! { #local }]);
     };
     let name = get_variable_name(&pat_type.pat)?;
     let type_ident = match pat_type.ty.deref() {
@@ -24,7 +24,7 @@ fn handle_let(local: Local) -> syn::Result<Vec<TokenStream2>> {
             Some(path_segment) => path_segment.ident.clone(),
             None => return Err(Error::new_spanned(type_path, "Invalid type path")),
         },
-        _ => return Ok(vec![quote! { local }]),
+        _ => return Ok(vec![quote! { #local }]),
     };
     let init_expr = match &local.init {
         Some(local_init) => local_init.expr.clone(),
@@ -35,14 +35,16 @@ fn handle_let(local: Local) -> syn::Result<Vec<TokenStream2>> {
             ));
         }
     };
-
-    Ok(vec![
-        quote! {let #name = #init_expr;},
-        quote! {let #name = #type_ident::new(
-            stringify!(#name),
-            &format!("{}.{}", f.get_path().replace("::", "."), f.get_name()),
-            #name
-        );},
-        quote! {f.add_variable(&#name);},
-    ])
+    match quote! {#type_ident}.to_string().as_str() {
+        "Score" => Ok(vec![
+            quote! {let #name = #init_expr;},
+            quote! {let #name = #type_ident::new(
+                stringify!(#name),
+                &format!("{}.{}", f.get_path().replace("::", "."), f.get_name()),
+                #name
+            );},
+            quote! {f.add_variable(&#name);},
+        ]),
+        _ => Ok(vec![quote! { #local }]),
+    }
 }
