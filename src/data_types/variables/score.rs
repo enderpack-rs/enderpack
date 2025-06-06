@@ -22,7 +22,7 @@ impl VariableInit<i32> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(path, resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().set(
             PlayerSelector::new(&fake_player_name),
             Objective::new(path).unwrap(),
@@ -42,7 +42,7 @@ impl VariableInit<Score> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(path, resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
             Objective::new(path).unwrap(),
@@ -64,7 +64,7 @@ impl VariableInit<Vec<Box<dyn Command>>> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(path, resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
         let mut init = value;
         init.push(Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),

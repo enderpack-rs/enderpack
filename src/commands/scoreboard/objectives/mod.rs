@@ -13,6 +13,6 @@ subcommands!(ScoreboardObjectives {
         list() => ScoreboardObjectivesList
     };
     new {
-        add(objective: &str, criteria: resource::Criteria) => ScoreboardObjectivesAdd
+        add(objective: resource::Objective, criteria: resource::Criteria) => ScoreboardObjectivesAdd
     };
 });
