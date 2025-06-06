@@ -1,7 +1,9 @@
 use std::ops::{Add, Deref};
 
 use crate::prelude::{
-    Command, PlayerSelector, TargetSelector, objectives::ScoreboardObjectivesAdd, resource,
+    Command, PlayerSelector, TargetSelector,
+    objectives::ScoreboardObjectivesAdd,
+    resource::{self, Objective},
     scoreboard,
 };
 
@@ -23,7 +25,7 @@ impl VariableInit<i32> for Score {
             .add(path, resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().set(
             PlayerSelector::new(&fake_player_name),
-            path,
+            Objective::new(path).unwrap(),
             value,
         ))];
         Self {
@@ -43,10 +45,10 @@ impl VariableInit<Score> for Score {
             .add(path, resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
-            path,
+            Objective::new(path).unwrap(),
             "=",
             PlayerSelector::new(&value.name),
-            path,
+            Objective::new(path).unwrap(),
         ))];
         Self {
             name: fake_player_name,
@@ -66,10 +68,10 @@ impl VariableInit<Vec<Box<dyn Command>>> for Score {
         let mut init = value;
         init.push(Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
-            path,
+            Objective::new(path).unwrap(),
             "=",
             PlayerSelector::new(".eax"),
-            path,
+            Objective::new(path).unwrap(),
         )));
         Self {
             name: fake_player_name,
