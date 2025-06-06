@@ -76,6 +76,15 @@ macro_rules! arguments {
             )+)?
         }
 
+        impl$(<$g_name: $generic>)? $struct$(<$g_name>)? {
+        $($(
+            pub fn $opt_arg_name(mut self, $opt_arg_name: $opt_arg_type) -> Self {
+                self.$opt_arg_name = Some($opt_arg_name);
+                self
+            }
+        )+)?
+        }
+
         impl$(<$g_name: $generic>)? ::std::fmt::Display for $struct$(<$g_name>)? {
             fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
                 write!(f, "{}", $as_string)?;
