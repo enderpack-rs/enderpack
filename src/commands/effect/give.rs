@@ -34,7 +34,7 @@ impl<T: Selector> Display for EffectGive<T> {
             }
         )?;
         for arg in [&self.duration].into_iter().flatten() {
-            write!(f, " {}", arg)?;
+            write!(f, " {arg}")?;
         }
         Ok(())
     }
