@@ -33,9 +33,9 @@ pub struct TargetSelector {
 }
 
 macro_rules! setter {
-    ($name:ident, $type:ty) => {
-        pub fn $name(mut self, $name: $type) -> Self {
-            self.$name = Some(Argument::new("$name", $name));
+    ($fn_name:ident($($name:ident: $type:ty),+)) => {
+        pub fn $fn_name(mut self, $($name: $type),+) -> Self {
+            $(self.$name = Some(Argument::new("$name", $name));)+
             self
         }
     };
@@ -56,23 +56,15 @@ impl TargetSelector {
         self.distance = Some(Argument::new("distance", MCRange::from(distance)));
         self
     }
-    pub fn limit(mut self, limit: u32) -> Self {
-        self.limit = Some(Argument::new("limit", limit));
-        self
-    }
-    pub fn xyz(mut self, x: f64, y: f64, z: f64) -> Self {
-        self.x = Some(Argument::new("x", x));
-        self.y = Some(Argument::new("y", y));
-        self.z = Some(Argument::new("z", z));
-        self
-    }
-    setter!(sort, Sort);
-    setter!(x, f64);
-    setter!(y, f64);
-    setter!(z, f64);
-    setter!(dx, f64);
-    setter!(dy, f64);
-    setter!(dz, f64);
+    setter!(limit(limit: u32));
+    setter!(sort(sort: Sort));
+    setter!(xyz(x: f64, y: f64, z: f64));
+    setter!(x(x: f64));
+    setter!(y(y: f64));
+    setter!(z(z: f64));
+    setter!(dx(dx: f64));
+    setter!(dy(dy: f64));
+    setter!(dz(dz: f64));
 }
 
 impl Selector for TargetSelector {}
