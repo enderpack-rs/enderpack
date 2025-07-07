@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{borrow::Borrow, fmt::Display};
 
 use crate::prelude::Selector;
 
@@ -9,10 +9,13 @@ pub struct Tellraw<T: Selector> {
     message: serde_json::Value,
 }
 
-pub fn tellraw<T: Selector>(selector: &T, message: &serde_json::Value) -> Tellraw<T> {
+pub fn tellraw<T: Selector>(
+    selector: impl Borrow<T>,
+    message: impl Borrow<serde_json::Value>,
+) -> Tellraw<T> {
     Tellraw {
-        selector: selector.clone(),
-        message: message.clone(),
+        selector: selector.borrow().clone(),
+        message: message.borrow().clone(),
     }
 }
 

@@ -40,13 +40,13 @@ macro_rules! subcommands {
                 }
             )*)*
             $($(
-                pub fn $new_c(self, $($new_arg: &$new_type),*) -> $new_s {
-                    $new_s::new($($new_arg.clone()),* $($new_base)?)
+                pub fn $new_c(self, $($new_arg: impl ::std::borrow::Borrow<$new_type>),*) -> $new_s {
+                    $new_s::new($($new_arg.borrow().clone()),* $($new_base)?)
                 }
             )*)*
             $($(
-                pub fn $gen_c<T: $generic>(self, $($gen_arg: &$gen_type),*) -> $gen_s<T> {
-                    $gen_s::new($($gen_arg.clone()),* $($gen_base)?)
+                pub fn $gen_c<T: $generic>(self, $($gen_arg: impl ::std::borrow::Borrow<$gen_type>),*) -> $gen_s<T> {
+                    $gen_s::new($($gen_arg.borrow().clone()),* $($gen_base)?)
                 }
             )*)*
         }
@@ -81,8 +81,8 @@ macro_rules! arguments {
 
         impl$(<$g_name: $generic>)? $struct$(<$g_name>)? {
         $($(
-            pub fn $opt_arg_name(mut self, $opt_arg_name: &$opt_arg_type) -> Self {
-                self.$opt_arg_name = Some($opt_arg_name.clone());
+            pub fn $opt_arg_name(mut self, $opt_arg_name: impl ::std::borrow::Borrow<$opt_arg_type>) -> Self {
+                self.$opt_arg_name = Some($opt_arg_name.borrow().clone());
                 self
             }
         )+)?

@@ -34,7 +34,7 @@ subcommands!(ScoreboardPlayers {
         operation(
             target: T,
             target_objective: resource::Objective,
-            operation: &str,
+            operation: str,
             source: T,
             source_objective: resource::Objective
         ) => ScoreboardPlayersOperation,

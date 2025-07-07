@@ -22,11 +22,11 @@ impl VariableInit<i32> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(&Objective::new(path).unwrap(), &resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), &resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().set(
-            &PlayerSelector::new(&fake_player_name),
-            &Objective::new(path).unwrap(),
-            &value,
+            PlayerSelector::new(&fake_player_name),
+            Objective::new(path).unwrap(),
+            value,
         ))];
         Self {
             name: fake_player_name,
@@ -42,13 +42,13 @@ impl VariableInit<Score> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(&Objective::new(path).unwrap(), &resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
         let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().operation(
-            &PlayerSelector::new(&fake_player_name),
-            &Objective::new(path).unwrap(),
-            &"=",
-            &PlayerSelector::new(&value.name),
-            &Objective::new(path).unwrap(),
+            PlayerSelector::new(&fake_player_name),
+            Objective::new(path).unwrap(),
+            "=",
+            PlayerSelector::new(&value.name),
+            Objective::new(path).unwrap(),
         ))];
         Self {
             name: fake_player_name,
@@ -64,14 +64,14 @@ impl VariableInit<Vec<Box<dyn Command>>> for Score {
         let fake_player_name = format!(".{name}");
         let declaration = scoreboard()
             .objectives()
-            .add(&Objective::new(path).unwrap(), &resource::Criteria::Dummy);
+            .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
         let mut init = value;
         init.push(Box::new(scoreboard().players().operation(
-            &PlayerSelector::new(&fake_player_name),
-            &Objective::new(path).unwrap(),
-            &"=",
-            &PlayerSelector::new(".eax"),
-            &Objective::new(path).unwrap(),
+            PlayerSelector::new(&fake_player_name),
+            Objective::new(path).unwrap(),
+            "=",
+            PlayerSelector::new(".eax"),
+            Objective::new(path).unwrap(),
         )));
         Self {
             name: fake_player_name,
