@@ -1,6 +1,7 @@
-use std::fmt::Display;
+use std::{any::Any, fmt::Display};
 
 use derive_new::new;
+use struct_iterable::Iterable;
 
 use crate::data_types::{
     range::MCRange,
@@ -9,7 +10,7 @@ use crate::data_types::{
 
 use super::Selector;
 
-#[derive(new, Clone)]
+#[derive(new, Clone, Iterable)]
 pub struct TargetSelector {
     variable: SelectorVariable,
     #[new(default)]
@@ -80,10 +81,15 @@ impl Display for TargetSelector {
             SelectorVariable::S => sel.push_str("@s"),
             SelectorVariable::N => sel.push_str("@n"),
         }
+        let all_args: Vec<(&'static str, &dyn Any)> = self.iter().skip(1).collect();
         let mut args: Vec<String> = Vec::new();
-        for arg in [&self.distance].into_iter().flatten() {
+        for arg in all_args.iter() {
             // e.g. <argument>=<value>
-            args.push(arg.to_string())
+            if let Some(arg_exists) = arg.1.downcast_ref::<Option<Argument<&dyn Display>>>()
+                && let Some(arg_some) = arg_exists
+            {
+                args.push(arg_some.to_string());
+            }
         }
         if !args.is_empty() {
             sel.push('[');
@@ -95,6 +101,6 @@ impl Display for TargetSelector {
             );
             sel.push(']');
         }
-        write!(f, "{}", sel)
+        write!(f, "{sel}")
     }
 }

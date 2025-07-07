@@ -14,3 +14,4 @@ uuid = "1.17.0"
 syn = { version = "2.0.101", features = ["extra-traits"] }
 regex = "1.11.1"
 dyn-clone = "1.0.19"
+struct_iterable = "0.1.1"
