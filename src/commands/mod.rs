@@ -18,6 +18,13 @@ macro_rules! factory {
             $struct {}
         }
     };
+    ($struct:ident => $function:ident$(<$g_name:ident: $generic:ident>)?($($arg_name:ident: $arg_type:ty),*)) => {
+        pub fn $function$(<$g_name: $generic>)?($($arg_name: impl ::std::borrow::Borrow<$arg_type>),*) -> $struct$(<$g_name>)? {
+            $struct {
+                $($arg_name: $arg_name.borrow().clone()),*
+            }
+        }
+    };
 }
 
 #[macro_export]
