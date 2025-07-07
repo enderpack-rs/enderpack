@@ -30,6 +30,10 @@ pub struct TargetSelector {
     dy: Option<Argument<f64>>,
     #[new(default)]
     dz: Option<Argument<f64>>,
+    #[new(default)]
+    x_rotation: Option<Argument<MCRange>>,
+    #[new(default)]
+    y_rotation: Option<Argument<MCRange>>,
 }
 
 macro_rules! setter {
@@ -59,6 +63,8 @@ impl TargetSelector {
     setter!(dx(dx: f64));
     setter!(dy(dy: f64));
     setter!(dz(dz: f64));
+    setter!(x_rotation<T: Into<MCRange>>(x_rotation: T));
+    setter!(y_rotation<T: Into<MCRange>>(y_rotation: T));
 }
 
 impl Selector for TargetSelector {}
