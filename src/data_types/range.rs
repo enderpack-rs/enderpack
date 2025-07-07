@@ -3,7 +3,7 @@ use std::{
     ops::{Range, RangeFrom, RangeTo},
 };
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum MCRange {
     Bound(Range<f64>),
     From(RangeFrom<f64>),

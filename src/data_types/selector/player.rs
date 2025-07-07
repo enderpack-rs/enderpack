@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use super::Selector;
 
+#[derive(Clone)]
 pub struct PlayerSelector(String);
 
 impl PlayerSelector {

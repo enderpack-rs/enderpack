@@ -11,4 +11,4 @@ pub use player::*;
 pub use target::*;
 pub use uuid::*;
 
-pub trait Selector: Display {}
+pub trait Selector: Display + Clone {}

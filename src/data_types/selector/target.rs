@@ -9,7 +9,7 @@ use crate::data_types::{
 
 use super::Selector;
 
-#[derive(new)]
+#[derive(new, Clone)]
 pub struct TargetSelector {
     variable: SelectorVariable,
     #[new(default)]

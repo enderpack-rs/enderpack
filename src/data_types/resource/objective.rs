@@ -2,6 +2,7 @@ use std::fmt::Display;
 
 use regex::{Error, Regex};
 
+#[derive(Clone)]
 pub struct Objective(String);
 
 impl Objective {

@@ -13,3 +13,4 @@ strum = { version = "0.27.1", features = ["derive"] }
 uuid = "1.17.0"
 syn = { version = "2.0.101", features = ["extra-traits"] }
 regex = "1.11.1"
+dyn-clone = "1.0.19"

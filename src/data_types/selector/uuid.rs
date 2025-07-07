@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 use super::Selector;
 
+#[derive(Clone)]
 pub struct UUIDSelector(Uuid);
 
 impl UUIDSelector {

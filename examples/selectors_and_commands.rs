@@ -6,15 +6,15 @@ fn main() {
     println!(
         "{}",
         effect()
-            .give(player_selector, resource::Effect::Speed)
+            .give(&player_selector, &resource::Effect::Speed)
             .duration(4)
     );
     let target_selector = all().distance(..10.0);
     println!(
         "{}",
         tellraw(
-            target_selector,
-            json!(["Some ",{"strikethrough":true,"text":"crossed"}," text"])
+            &target_selector,
+            &json!(["Some ",{"strikethrough":true,"text":"crossed"}," text"])
         )
     );
 }

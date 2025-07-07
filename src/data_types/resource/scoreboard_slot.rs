@@ -1,4 +1,4 @@
-#[derive(strum::Display)]
+#[derive(strum::Display, Clone)]
 #[strum(serialize_all = "snake_case")]
 pub enum ScoreboardSlot {
     List,

@@ -9,8 +9,11 @@ pub struct Tellraw<T: Selector> {
     message: serde_json::Value,
 }
 
-pub fn tellraw<T: Selector>(selector: T, message: serde_json::Value) -> Tellraw<T> {
-    Tellraw { selector, message }
+pub fn tellraw<T: Selector>(selector: &T, message: &serde_json::Value) -> Tellraw<T> {
+    Tellraw {
+        selector: selector.clone(),
+        message: message.clone(),
+    }
 }
 
 impl<T: Selector> Command for Tellraw<T> {}

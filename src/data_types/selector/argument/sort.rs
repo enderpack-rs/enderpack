@@ -1,4 +1,4 @@
-#[derive(strum::Display)]
+#[derive(strum::Display, Clone)]
 pub enum Sort {
     Nearest,
     Furthest,

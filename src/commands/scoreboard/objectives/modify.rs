@@ -1,6 +1,6 @@
 use crate::{arguments, data_types::resource};
 
-#[derive(strum::Display)]
+#[derive(strum::Display, Clone)]
 pub enum Mode {
     #[strum(to_string = "displayautoupdate {0}")]
     DisplayAutoupdate(bool),
@@ -12,7 +12,7 @@ pub enum Mode {
     RenderType(RenderTypeEnum),
 }
 
-#[derive(strum::Display)]
+#[derive(strum::Display, Clone)]
 #[strum(serialize_all = "lowercase")]
 pub enum RenderTypeEnum {
     Hearts,

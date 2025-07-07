@@ -1,4 +1,4 @@
-#[derive(strum::Display)]
+#[derive(strum::Display, Clone)]
 pub enum Effect {
     Speed,
     Slowness,

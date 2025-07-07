@@ -3,7 +3,7 @@ pub use sort::*;
 
 use std::fmt::Display;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Argument<T: Display> {
     name: String,
     value: T,

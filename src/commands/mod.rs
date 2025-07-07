@@ -40,13 +40,13 @@ macro_rules! subcommands {
                 }
             )*)*
             $($(
-                pub fn $new_c(self, $($new_arg: $new_type),*) -> $new_s {
-                    $new_s::new($($new_arg),* $($new_base)?)
+                pub fn $new_c(self, $($new_arg: &$new_type),*) -> $new_s {
+                    $new_s::new($($new_arg.clone()),* $($new_base)?)
                 }
             )*)*
             $($(
-                pub fn $gen_c<T: $generic>(self, $($gen_arg: $gen_type),*) -> $gen_s<T> {
-                    $gen_s::new($($gen_arg),* $($gen_base)?)
+                pub fn $gen_c<T: $generic>(self, $($gen_arg: &$gen_type),*) -> $gen_s<T> {
+                    $gen_s::new($($gen_arg.clone()),* $($gen_base)?)
                 }
             )*)*
         }
@@ -63,7 +63,7 @@ macro_rules! arguments {
             $($(#[$opt_attr:meta])* $opt_arg_name:ident: $opt_arg_type:ty),+
         };)?
     }) => {
-        #[derive(::derive_new::new)]
+        #[derive(::derive_new::new, Clone)]
         pub struct $struct$(<$g_name: $generic>)? {
             $($(
                 $(#[$req_attr])*
@@ -81,8 +81,8 @@ macro_rules! arguments {
 
         impl$(<$g_name: $generic>)? $struct$(<$g_name>)? {
         $($(
-            pub fn $opt_arg_name(mut self, $opt_arg_name: $opt_arg_type) -> Self {
-                self.$opt_arg_name = Some($opt_arg_name);
+            pub fn $opt_arg_name(mut self, $opt_arg_name: &$opt_arg_type) -> Self {
+                self.$opt_arg_name = Some($opt_arg_name.clone());
                 self
             }
         )+)?
