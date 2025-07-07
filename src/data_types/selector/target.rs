@@ -33,9 +33,9 @@ pub struct TargetSelector {
 }
 
 macro_rules! setter {
-    ($fn_name:ident($($name:ident: $type:ty),+)) => {
-        pub fn $fn_name(mut self, $($name: $type),+) -> Self {
-            $(self.$name = Some(Argument::new("$name", $name));)+
+    ($fn_name:ident$(<$gen_name:ident: Into<$generic:ident>>)?($($name:ident: $type:ty),+)) => {
+        pub fn $fn_name$(<$gen_name: ::std::convert::Into<$generic>>)?(mut self, $($name: $type),+) -> Self {
+            $(self.$name = Some(Argument::new("$name", $name.into()));)+
             self
         }
     };
@@ -49,13 +49,7 @@ pub fn all_players() -> TargetSelector {
 }
 
 impl TargetSelector {
-    pub fn distance<T>(mut self, distance: T) -> Self
-    where
-        MCRange: std::convert::From<T>,
-    {
-        self.distance = Some(Argument::new("distance", MCRange::from(distance)));
-        self
-    }
+    setter!(distance<T: Into<MCRange>>(distance: T));
     setter!(limit(limit: u32));
     setter!(sort(sort: Sort));
     setter!(xyz(x: f64, y: f64, z: f64));
