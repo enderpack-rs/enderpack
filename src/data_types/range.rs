@@ -19,7 +19,7 @@ impl Display for MCRange {
             MCRange::To(range) => format!("..{}", range.end),
             MCRange::Exact(exact) => exact.to_string(),
         };
-        write!(f, "{}", as_string)
+        write!(f, "{as_string}")
     }
 }
 
