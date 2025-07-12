@@ -1,7 +1,6 @@
-use std::{any::Any, fmt::Display};
+use std::fmt::Display;
 
 use derive_new::new;
-use struct_iterable::Iterable;
 
 use crate::data_types::{
     range::MCRange,
@@ -10,7 +9,7 @@ use crate::data_types::{
 
 use super::Selector;
 
-#[derive(new, Clone, Iterable)]
+#[derive(new, Clone)]
 pub struct TargetSelector {
     variable: SelectorVariable,
     #[new(default)]
@@ -35,12 +34,17 @@ pub struct TargetSelector {
     x_rotation: Option<Argument<MCRange>>,
     #[new(default)]
     y_rotation: Option<Argument<MCRange>>,
+    #[new(default)]
+    internal_string: String,
 }
 
 macro_rules! setter {
     ($fn_name:ident$(<$gen_name:ident: Into<$generic:ident>>)?($($name:ident: $type:ty),+)) => {
         pub fn $fn_name$(<$gen_name: ::std::convert::Into<$generic>>)?(mut self, $($name: $type),+) -> Self {
-            $(self.$name = Some(Argument::new("$name", $name.into()));)+
+            $(
+                self.$name = Some(Argument::new(stringify!($name), $name.into()));
+                self.internal_string.push_str(&format!("{}, ", self.$name.as_ref().unwrap().to_string()));
+            )+
             self
         }
     };
@@ -81,24 +85,9 @@ impl Display for TargetSelector {
             SelectorVariable::S => sel.push_str("@s"),
             SelectorVariable::N => sel.push_str("@n"),
         }
-        let all_args: Vec<(&'static str, &dyn Any)> = self.iter().skip(1).collect();
-        let mut args: Vec<String> = Vec::new();
-        for arg in all_args.iter() {
-            // e.g. <argument>=<value>
-            if let Some(arg_exists) = arg.1.downcast_ref::<Option<Argument<&dyn Display>>>()
-                && let Some(arg_some) = arg_exists
-            {
-                args.push(arg_some.to_string());
-            }
-        }
-        if !args.is_empty() {
+        if !self.internal_string.is_empty() {
             sel.push('[');
-            sel.push_str(
-                args.iter()
-                    .fold(String::new(), |acc, arg| format!("{arg}, {acc}"))
-                    .as_str()
-                    .trim_end_matches(", "),
-            );
+            sel.push_str(self.internal_string.trim_end_matches(", "));
             sel.push(']');
         }
         write!(f, "{sel}")
