@@ -3,11 +3,14 @@ pub mod scoreboard;
 pub mod tellraw;
 use std::fmt::Display;
 
+use dyn_clone::DynClone;
 pub use effect::*;
 pub use scoreboard::*;
 pub use tellraw::*;
 
-pub trait Command: Display {}
+pub trait Command: Display + DynClone {}
+
+dyn_clone::clone_trait_object!(Command);
 
 #[macro_export]
 macro_rules! factory {

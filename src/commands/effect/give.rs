@@ -5,7 +5,7 @@ use derive_new::new;
 
 use crate::prelude::{Command, Selector, resource};
 
-#[derive(new)]
+#[derive(new, Clone)]
 pub struct EffectGive<T: Selector> {
     selector: T,
     effect: resource::Effect,

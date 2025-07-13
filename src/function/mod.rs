@@ -5,7 +5,7 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::prelude::{Command, Variable};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Function {
     name: String,
     body: Vec<String>,
