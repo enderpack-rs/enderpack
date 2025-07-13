@@ -1,7 +1,7 @@
-use std::ops::{Add, Deref};
+pub mod add;
 
 use crate::prelude::{
-    Command, PlayerSelector, TargetSelector,
+    Command, PlayerSelector,
     objectives::add::ScoreboardObjectivesAdd,
     resource::{self, Objective},
     scoreboard,
@@ -16,6 +16,8 @@ pub struct Score {
     declaration: ScoreboardObjectivesAdd,
     init: Vec<Box<dyn Command>>, // Can be a ScoreboardPlayersSet or ScoreboardPlayersOperation
 }
+
+const INTERMEDIATE: &str = ".eax";
 
 impl VariableInit<i32> for Score {
     fn new(name: &str, path: &str, value: i32) -> Self {
@@ -43,13 +45,24 @@ impl VariableInit<Score> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
-        let init: Vec<Box<dyn Command>> = vec![Box::new(scoreboard().players().operation(
+
+        let copy_from_value = Box::new(scoreboard().players().operation(
             PlayerSelector::new(&fake_player_name),
             Objective::new(path).unwrap(),
             "=",
             PlayerSelector::new(&value.name),
             Objective::new(path).unwrap(),
-        ))];
+        ));
+
+        let init: Vec<Box<dyn Command>> = if dbg!(&value.name) == INTERMEDIATE {
+            // Operation result
+            let mut previous_operations = value.init;
+            previous_operations.push(copy_from_value);
+            previous_operations
+        } else {
+            // Copy variable
+            vec![copy_from_value]
+        };
         Self {
             name: fake_player_name,
             path: path.to_owned(),
@@ -65,14 +78,17 @@ impl VariableInit<Vec<Box<dyn Command>>> for Score {
         let declaration = scoreboard()
             .objectives()
             .add(Objective::new(path).unwrap(), resource::Criteria::Dummy);
+        dbg!(name);
         let mut init = value;
-        init.push(Box::new(scoreboard().players().operation(
-            PlayerSelector::new(&fake_player_name),
-            Objective::new(path).unwrap(),
-            "=",
-            PlayerSelector::new(".eax"),
-            Objective::new(path).unwrap(),
-        )));
+        if fake_player_name != INTERMEDIATE {
+            init.push(Box::new(scoreboard().players().operation(
+                PlayerSelector::new(&fake_player_name),
+                Objective::new(path).unwrap(),
+                "=",
+                PlayerSelector::new(INTERMEDIATE),
+                Objective::new(path).unwrap(),
+            )));
+        }
         Self {
             name: fake_player_name,
             path: path.to_owned(),
@@ -90,26 +106,3 @@ impl Variable for Score {
         &self.init
     }
 }
-
-// impl Add<i32> for Score {
-//     type Output = Vec<Box<dyn Command>>;
-//     fn add(self, rhs: i32) -> Self::Output {
-//         let eax = PlayerSelector::new(".eax");
-//         vec![
-//             Box::new(scoreboard().players().operation(
-//                 eax,
-//                 &self.path,
-//                 "=",
-//                 PlayerSelector::new(&self.name),
-//                 &self.path,
-//             )),
-//             Box::new(scoreboard().players().operation(
-//                 eax,
-//                 &self.path,
-//                 "+=",
-//                 ,
-//                 source_objective,
-//             )),
-//         ]
-//     }
-// }
