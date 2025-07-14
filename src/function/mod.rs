@@ -1,7 +1,7 @@
 pub mod tag;
 pub use tag::*;
 
-use std::{fmt::Display, ops::Deref};
+use std::{collections::BTreeSet, fmt::Display, ops::Deref};
 
 use crate::prelude::{Command, Variable};
 
@@ -9,14 +9,14 @@ pub trait CommandRegister<T> {
     fn add_command(&mut self, command: T) -> &Self;
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Eq, PartialEq, Ord, PartialOrd)]
 pub struct Function {
     name: String,
     body: Vec<String>,
     namespace: String,
     module: String,
     path: String,
-    pub implicit_registrations: Vec<Function>,
+    pub implicit_registrations: BTreeSet<Function>,
 }
 
 impl Function {
@@ -34,7 +34,7 @@ impl Function {
             namespace,
             module,
             path: path.to_owned(),
-            implicit_registrations: vec![],
+            implicit_registrations: BTreeSet::new(),
         }
     }
     pub fn get_name(&self) -> String {
@@ -63,7 +63,7 @@ impl<T: Command + ?Sized> CommandRegister<&T> for Function {
 
 impl CommandRegister<&Function> for Function {
     fn add_command(&mut self, command: &Function) -> &Self {
-        self.implicit_registrations.push(command.clone());
+        self.implicit_registrations.insert(command.clone());
         self.body.push(command.to_string());
         self
     }

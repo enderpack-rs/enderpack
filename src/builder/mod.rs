@@ -1,5 +1,7 @@
 pub mod namespace;
 pub mod version;
+use std::collections::{BTreeSet, HashSet};
+
 pub use namespace::Namespace;
 pub use version::Version;
 
@@ -10,7 +12,7 @@ pub struct Datapack {
     namespace: Namespace,
     description: String,
     version: Version,
-    functions: Vec<(Tag, Function)>,
+    functions: BTreeSet<(Tag, Function)>,
 }
 
 #[macro_export]
@@ -26,16 +28,18 @@ impl Datapack {
             namespace,
             description: description.to_owned(),
             version,
-            functions: vec![],
+            functions: BTreeSet::new(),
         }
     }
     pub fn add_function<T: Fn() -> Function>(mut self, tag: Tag, function_factory: T) -> Self {
         let function = function_factory();
-        self.functions.push((tag, function.clone()));
+        self.functions.insert((tag, function.clone()));
         function
             .implicit_registrations
             .into_iter()
-            .for_each(|implicit_function| self.functions.push((Tag::None, implicit_function)));
+            .for_each(|implicit_function| {
+                _ = self.functions.insert((Tag::None, implicit_function))
+            });
         self
     }
 }
