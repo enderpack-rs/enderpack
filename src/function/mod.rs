@@ -5,6 +5,10 @@ use std::{fmt::Display, ops::Deref};
 
 use crate::prelude::{Command, Variable};
 
+pub trait CommandRegister<T> {
+    fn add_command(&mut self, command: T) -> &Self;
+}
+
 #[derive(Debug, Clone)]
 pub struct Function {
     name: String,
@@ -12,6 +16,7 @@ pub struct Function {
     namespace: String,
     module: String,
     path: String,
+    pub implicit_registrations: Vec<Function>,
 }
 
 impl Function {
@@ -29,6 +34,7 @@ impl Function {
             namespace,
             module,
             path: path.to_owned(),
+            implicit_registrations: vec![],
         }
     }
     pub fn get_name(&self) -> String {
@@ -37,11 +43,7 @@ impl Function {
     pub fn get_path(&self) -> String {
         self.path.to_owned()
     }
-    pub fn add_command<T: Command + ?Sized>(&mut self, command: &T) -> &Self {
-        self.body.push(command.to_string());
-        self
-    }
-    pub fn add_variable<T: Variable>(&mut self, variable: &T) -> &Self {
+    pub fn add_variable(&mut self, variable: &impl Variable) -> &Self {
         if !self.body.contains(&variable.get_declaration().to_string()) {
             self.add_command(variable.get_declaration());
         }
@@ -52,10 +54,28 @@ impl Function {
     }
 }
 
-impl Command for Function {}
+impl<T: Command + ?Sized> CommandRegister<&T> for Function {
+    fn add_command(&mut self, command: &T) -> &Self {
+        self.body.push(command.to_string());
+        self
+    }
+}
+
+impl CommandRegister<&Function> for Function {
+    fn add_command(&mut self, command: &Function) -> &Self {
+        self.implicit_registrations.push(command.clone());
+        self.body.push(command.to_string());
+        self
+    }
+}
 
 impl Display for Function {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "function")
+        write!(f, "function {}:", self.namespace)?;
+        if !self.module.is_empty() {
+            write!(f, "{}/", self.module)?;
+        }
+        write!(f, "{}", self.name)?;
+        Ok(())
     }
 }

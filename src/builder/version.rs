@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Version(u32);
 
 impl Version {
@@ -14,4 +14,3 @@ impl Display for Version {
         write!(f, "{}", self.0)
     }
 }
-

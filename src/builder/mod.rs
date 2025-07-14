@@ -5,7 +5,7 @@ pub use version::Version;
 
 use crate::prelude::{Function, Tag};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Datapack {
     namespace: Namespace,
     description: String,
@@ -31,7 +31,11 @@ impl Datapack {
     }
     pub fn add_function<T: Fn() -> Function>(mut self, tag: Tag, function_factory: T) -> Self {
         let function = function_factory();
-        self.functions.push((tag, function));
+        self.functions.push((tag, function.clone()));
+        function
+            .implicit_registrations
+            .into_iter()
+            .for_each(|implicit_function| self.functions.push((Tag::None, implicit_function)));
         self
     }
 }
